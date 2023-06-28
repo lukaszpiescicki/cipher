@@ -15,7 +15,6 @@ def save_to_file(file_name: str, data: dict):
     file_status = startup_check(path)
 
     if file_status:
-        print("istnieje")
         with open(f"{file_name}.json", "r+") as file:
             file_data = json.load(file)
             for k, v in data.items():
@@ -24,13 +23,14 @@ def save_to_file(file_name: str, data: dict):
             json.dump(file_data, file, indent=4)
             file.truncate()
     else:
-        print("nie istnieje")
         with open(f"{file_name}.json", "w") as file:
             json.dump(data, file)
 
 
-x = {"organization": "GeeksForGeeks", "city": "Noida", "country": "India"}
-y = {"pin": 110096}
-
-save_to_file("test", x)
-save_to_file("test", y)
+def read_file(file_name: str):
+    try:
+        with open(file_name, "r") as file:
+            data = json.load(file)
+            print(data)
+    except FileNotFoundError:
+        print("File not found")
