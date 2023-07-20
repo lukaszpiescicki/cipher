@@ -1,42 +1,4 @@
-# from __future__ import annotations
-from src.memory_buffer import Text
-
-# from abc import ABC, abstractmethod
-
-# class Rot(ABC):
-#     @abstractmethod
-#     def encrypt(self):
-#         pass
-#
-#     @abstractmethod
-#     def decrypt(self):
-#         pass
-#
-#     @staticmethod
-#     def get_rot(rot_type: str) -> Rot13 | Rot47:
-#         if rot_type == 'rot13':
-#             return Rot13()
-#         elif rot_type == 'rot47':
-#             return Rot47()
-#
-# class Rot13(Rot):
-#     def encrypt(self):
-#         pass
-#
-#     def decrypt(self):
-#         pass
-#
-#
-# class Rot47(Rot):
-#     def encrypt(self):
-#         pass
-#
-#     def decrypt(self):
-#         pass
-#
-#
-# class Rot15(Rot):
-#     pass
+from .memory_buffer import Text
 
 
 class Cipher:
