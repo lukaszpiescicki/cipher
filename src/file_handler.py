@@ -1,11 +1,9 @@
 import json
 import os
 
-from memory_buffer import Text
-
 
 class File:
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
         self.path = path
 
     def exist(self) -> bool:
@@ -22,8 +20,8 @@ def is_valid_file(file: File) -> bool:
     return file.exist() and file.readable() and not file.is_empty()
 
 
-def save_to_file(file_name: str, data: list[Text]):
-    path = f"./files/{file_name}.json"
+def save_to_file(file_name: str, data: list[dict[str, str | int]]) -> None:
+    path: str = f"./src/files/{file_name}.json"
     file_obj = File(path)
 
     if is_valid_file(file_obj):
@@ -38,7 +36,7 @@ def save_to_file(file_name: str, data: list[Text]):
             json.dump(dct, f)
 
 
-def read_file(file_name: str):
+def read_file(file_name: str) -> None:
     try:
         with open(file_name, "r") as file:
             data = json.load(file)

@@ -1,5 +1,5 @@
 # from __future__ import annotations
-from memory_buffer import Text
+from src.memory_buffer import Text
 
 # from abc import ABC, abstractmethod
 
