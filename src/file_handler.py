@@ -1,3 +1,4 @@
+from typing import Optional
 import json
 import os
 
@@ -20,19 +21,22 @@ def is_valid_file(file: File) -> bool:
     return file.exist() and file.readable() and not file.is_empty()
 
 
-def save_to_file(file_name: str, data: list[dict[str, str | int]]) -> None:
-    path: str = f"./src/files/{file_name}.json"
-    file_obj = File(path)
+def save_to_file(
+    file_name: str, data: list[dict[str, str | int]], path: Optional[str] = None
+) -> None:
+    if path is None:
+        path: str = f"./src/files"
+    file_obj = File(f"{path}/{file_name}.json")
 
     if is_valid_file(file_obj):
-        with open(f"{file_name}.json", "r+") as file:
+        with open(f"{path}/{file_name}.json", "r+") as file:
             file_data = json.load(file)
             file_data["items"] += data
             file.seek(0)
             json.dump(file_data, file, indent=4)
     else:
         dct = {"items": data}
-        with open(f"{file_name}.json", "w") as f:
+        with open(f"{path}/{file_name}.json", "w") as f:
             json.dump(dct, f)
 
 
@@ -40,6 +44,6 @@ def read_file(file_name: str) -> None:
     try:
         with open(file_name, "r") as file:
             data = json.load(file)
-            print(data)
+            return data
     except FileNotFoundError:
         print("File not found")
