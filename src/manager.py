@@ -1,56 +1,68 @@
-from memory_buffer import Buffer
-from cipher import Cipher, Text
-from file_handler import save_to_file, read_file
-from typing import Tuple
+from typing import Dict, Callable
+from .memory_buffer import Buffer
+from .cipher import Cipher
+from .file_handler import save_to_file, read_file
 
 
 class Manager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.buffer = Buffer()
+        self.is_running = True
 
-    def run(self):
-        options = {
-            "1": Cipher.encrypt,
-            "2": Cipher.decrypt,
-            "3": save_to_file,
-            "4": read_file,
+    def run(self) -> None:
+        options: Dict[str, Callable] = {
+            "1": lambda: self.process_text("encrypt"),
+            "2": lambda: self.process_text("decrypt"),
+            "3": self.save_file,
+            "4": self.read_file,
+            "5": self.buffer.display,
+            "6": self.stop_program,
         }
 
-        while True:
-            user_input = input("Your choice:")
+        while self.is_running:
+            self.display_menu()
+            user_input = self.get_user_input("Choose an option: ")
             if user_input in options:
-                ciphered_word = options.get(user_input)
-                self.buffer.add(ciphered_word)
-                print(ciphered_word.text)
-
-            elif user_input == "5":
-                break
+                options.get(user_input)()
             else:
                 print("Type in a valid number")
 
     def get_user_input(self, msg: str) -> str:
         return input(msg)
 
-    def get_user_data(self) -> Tuple[str, str]:
-        user_word: str = input("Insert a word: ")
-        user_num: str = input("Insert a cipher key: ")
-        return user_word, user_num
+    def process_text(self, operation: str) -> None:
+        user_word = self.get_user_input("Type in a word to encrypt: ")
+        user_num = self.get_user_input("Type in a key: ")
 
-    def encrypt_file(self) -> Text:
-        user_word, user_num = self.get_user_data()
-        ciphered_word = Cipher.encrypt(user_word, int(user_num))
-        return ciphered_word
+        if operation == "encrypt":
+            processed_text = Cipher.encrypt(user_word, int(user_num))
+        elif operation == "decrypt":
+            processed_text = Cipher.decrypt(user_word, int(user_num))
+        else:
+            print("Invalid Operation")
+            return
+        self.buffer.add(processed_text)
 
-    def save_file(self):
-        user_file_name = self.get_user_input("Give a file name: ")
+    def save_file(self) -> None:
+        user_file_name: str = self.get_user_input("Give a file name: ")
         save_to_file(user_file_name, self.buffer.memory_as_dict())
 
-    def display_menu(self):
+    def read_file(self) -> None:
+        user_file_name: str = self.get_user_input(
+            "Give name of a file you want to read: "
+        )
+        read_file(user_file_name)
+
+    def stop_program(self) -> None:
+        self.is_running = False
+
+    def display_menu(self) -> None:
         print(
             f"Choose a number:\n"
             f"1.Encrypt a word\n"
             f"2.Decrypt a word\n"
             f"3.Save word to a file\n"
             f"4.Check words saved in the file\n"
-            f"5.Exit\n"
+            f"5.Check words saved in the buffer\n"
+            f"6.Exit\n"
         )
