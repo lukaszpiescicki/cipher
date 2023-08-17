@@ -41,6 +41,7 @@ class Manager:
         else:
             print("Invalid Operation")
             return
+
         self.buffer.add(processed_text)
 
     def save_file(self) -> None:
